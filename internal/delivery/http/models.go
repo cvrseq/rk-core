@@ -7,10 +7,13 @@ import (
 )
 
 type GenerateVPNRequest struct {
-	UserID string `json:"user_id" binding:"required,uuid"`
-
-	Region string `json:"region" binding:"required,len=2"`
+	UserID  string `json:"user_id" binding:"required,uuid"`
+	OrderID string `json:"order_id"`
+	Region  string `json:"region"`
+	Cfg     string `json:"config" binding:"required"`
 }
+
+var list []GenerateVPNRequest
 
 func GenerateVPN(c *gin.Context) {
 	var req GenerateVPNRequest
@@ -19,13 +22,23 @@ func GenerateVPN(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 			"status":  "error",
+			"config":  "no data",
 		})
 		return
 	}
 
+	list = append(list, req)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "vpn successfully configured",
 		"status":  "ok",
-		"data":    req,
+	})
+}
+
+func GetAllUsersVpn(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "get data successfully",
+		"status":   "ok",
+		"all data": list,
 	})
 }
