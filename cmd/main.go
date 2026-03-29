@@ -13,6 +13,7 @@ func main() {
 
 	router.POST("/vpn", delivery.GenerateVPN)
 	router.GET("/vpn/all", delivery.GetAllUsersVpn)
+	router.GET("/vpn/check", delivery.GetUserByID)
 
 	log.Println("Vpn control plane started work...")
 
