@@ -5,15 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	delivery "rs/internal/delivery/http"
+	handlers "rs/internal/handlers/http"
 )
 
 func main() {
 	router := gin.Default()
 
-	router.POST("/vpn", delivery.GenerateVPN)
-	router.GET("/vpn/all", delivery.GetAllUsersVpn)
-	router.GET("/vpn/check", delivery.GetUserByID)
+	router.POST("/vpn", handlers.GenerateVPN)
+	router.GET("/vpn/all", handlers.GetAllUsersVpn)
+	router.GET("/vpn/check", handlers.GetUserByID)
 
 	log.Println("Vpn control plane started work...")
 
