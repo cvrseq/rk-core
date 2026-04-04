@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: database
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - "pgdata:/var/lib/postgresql/data"
+
+  app:
+    build: .
+    container_name: go_app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=devuser
+      - DB_PASSWORD=devpassword
+      - DB_NAME=database
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
