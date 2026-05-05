@@ -9,8 +9,3 @@ type CfgVpnModel struct {
 	IsActive  bool      `gorm:"column:is_active" json:"is_active"`
 	ExpiresAt int64     `gorm:"index" json:"expires_at"`
 }
-
-type UserModel struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	NickName string `gorm:"column:nick_name" json:"nick_name"`
-}
