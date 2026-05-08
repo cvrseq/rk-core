@@ -1,4 +1,4 @@
-module rs
+module github.com/cvrseq/rk-core
 
 go 1.25.5
 
