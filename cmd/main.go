@@ -13,7 +13,7 @@ import (
 func main() {
 	database, err := db.InitDB()
 	if err != nil {
-		log.Fatal("Could not connect database")
+		log.Fatalf("Could not connect database: %v", err)
 	}
 
 	router := http.NewServeMux()
