@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"errors"
 
+	"github.com/cvrseq/rk-core/internal/handlers"
 	"github.com/cvrseq/rk-core/internal/models"
 )
 
@@ -22,32 +24,32 @@ func NewVpnConfigDataService(repo VpnConfigDataRepository) *VpnConfigDataService
 	}
 }
 
-type VpnConfigRequest struct {
-	UserID  uint   `json:"user_id"`
-	OrderID uint   `json:"order_id"`
-	Region  string `json:"region"`
-}
+func (s *VpnConfigDataService) GenerateConfig(ctx context.Context, input handlers.VpnConfigRequest) (handlers.VpnConfigResponse, error) {
+	envCfg := "some generated config" // hardcode
 
-type VpnConfigResponse struct {
-	UserID  uint   `json:"user_id"`
-	OrderID uint   `json:"order_id"`
-	Region  string `json:"region"`
-	Cfg     string `json:"config"`
-}
+	if input.UserID == 0 {
+		return handlers.VpnConfigResponse{}, errors.New("user_id is required")
+	}
 
-func (s *VpnConfigDataService) GenerateConfig(ctx context.Context, input VpnConfigRequest) (VpnConfigResponse, error) {
-	envCfg := "some generated config"
+	if input.OrderID == 0 {
+		return handlers.VpnConfigResponse{}, errors.New("order_id is required")
+	}
+
+	if input.Region == "" {
+		return handlers.VpnConfigResponse{}, errors.New("region is required")
+	}
 
 	config := models.VpnConfigModel{
 		UserID:  input.UserID,
 		OrderID: input.OrderID,
+		Region:  input.Region,
 	}
 
 	if err := s.repo.Create(ctx, config); err != nil {
-		return VpnConfigResponse{}, err
+		return handlers.VpnConfigResponse{}, err
 	}
 
-	return VpnConfigResponse{
+	return handlers.VpnConfigResponse{
 		UserID:  input.UserID,
 		OrderID: input.OrderID,
 		Region:  input.Region,

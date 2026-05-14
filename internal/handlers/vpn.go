@@ -6,11 +6,10 @@ import (
 	"net/http"
 
 	"github.com/cvrseq/rk-core/internal/models"
-	"github.com/cvrseq/rk-core/internal/service"
 )
 
 type VpnConfigService interface {
-	GenerateConfig(ctx context.Context, input service.VpnConfigRequest) (service.VpnConfigResponse, error)
+	GenerateConfig(ctx context.Context, input VpnConfigRequest) (VpnConfigResponse, error)
 	GetConfig(ctx context.Context) ([]models.VpnConfigModel, error) // need think it from gorm to local json
 }
 
@@ -24,15 +23,28 @@ func NewConfigHandler(serv VpnConfigService) *VpnConfigHandler {
 	}
 }
 
+type VpnConfigRequest struct {
+	UserID  uint   `json:"user_id"`
+	OrderID uint   `json:"order_id"`
+	Region  string `json:"region"`
+}
+
+type VpnConfigResponse struct {
+	UserID  uint   `json:"user_id"`
+	OrderID uint   `json:"order_id"`
+	Region  string `json:"region"`
+	Cfg     string `json:"config"`
+}
+
 func (h *VpnConfigHandler) Generate(w http.ResponseWriter, r *http.Request) {
-	var cfg models.VpnConfigModel
+	var cfg VpnConfigRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&cfg); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	req := &service.VpnConfigRequest{
+	req := &VpnConfigRequest{
 		UserID:  cfg.UserID,
 		OrderID: cfg.OrderID,
 		Region:  cfg.Region,
